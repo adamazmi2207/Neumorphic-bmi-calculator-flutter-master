@@ -18,6 +18,7 @@ class BMICalculatorBrain {
   String calculateBMI() {
     //calculate bmi value and convert to percentage
     _bmi = weight / pow(height / 100, 2);
+    //print("bmi" + _bmi.toStringAsFixed(1));
     return _bmi.toStringAsFixed(1);
   }
 
@@ -32,13 +33,13 @@ class BMICalculatorBrain {
   String calculateBodyFat() {
     if (age <= 15) {
       _bf = (1.51 * _bmi) - (0.70 * age) - (3.6 * sex) + 1.4;
-      print("below 15 BodyFat");
-      print(_bf.toStringAsFixed(1));
+      //print("below 15 BodyFat");
+     //print("bf" + _bf.toStringAsFixed(1));
       return _bf.toStringAsFixed(1);
     } else
       _bf = (1.39 * _bmi) - (0.16 * age) - (10.34 * sex) - 9.0;
-    print("above 15 BodyFat");
-    print(_bf.toStringAsFixed(1));
+    //print("above 15 BodyFat");
+    //print("bf" + _bf.toStringAsFixed(1));
     return _bf.toStringAsFixed(1);
   }
 
