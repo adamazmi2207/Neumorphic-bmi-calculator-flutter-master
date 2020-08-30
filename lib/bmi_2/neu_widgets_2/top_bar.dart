@@ -13,22 +13,22 @@ class TopBar extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        NeumorphicButton(
-          //margin: EdgeInsets.only(top: 12),
-          onClick: () {
-            NeumorphicTheme.of(context).usedTheme =
-                NeumorphicTheme.isUsingDark(context)
-                    ? UsedTheme.LIGHT
-                    : UsedTheme.DARK;
-          },
-          style: NeumorphicStyle(shape: NeumorphicShape.concave),
-          boxShape: NeumorphicBoxShape.circle(),
-          padding: const EdgeInsets.all(12.0),
-          child: Icon(
-            FontAwesomeIcons.adjust,
-            color: iconsColor(context),
-          ),
-        ),
+        // NeumorphicButton(
+        //   //margin: EdgeInsets.only(top: 12),
+        //   onClick: () {
+        //     NeumorphicTheme.of(context).usedTheme =
+        //         NeumorphicTheme.isUsingDark(context)
+        //             ? UsedTheme.LIGHT
+        //             : UsedTheme.DARK;
+        //   },
+        //   style: NeumorphicStyle(shape: NeumorphicShape.concave),
+        //   boxShape: NeumorphicBoxShape.circle(),
+        //   padding: const EdgeInsets.all(12.0),
+        //   child: NeumorphicTheme.isUsingDark(context)
+        //       ? Icon(FontAwesomeIcons.solidSun, color: iconsColor(context))
+        //       : Icon(FontAwesomeIcons.moon, color: iconsColor(context)),
+        //   // Icon(FontAwesomeIcons.adjust, color: iconsColor(context)),
+        // ),
         Text(
           title,
           style: TextStyle(fontSize: 24.0, color: textColor(context)),
@@ -44,10 +44,9 @@ class TopBar extends StatelessWidget {
           style: NeumorphicStyle(shape: NeumorphicShape.concave),
           boxShape: NeumorphicBoxShape.circle(),
           padding: const EdgeInsets.all(12.0),
-          child: Icon(
-            FontAwesomeIcons.globe,
-            color: iconsColor(context),
-          ),
+          child: NeumorphicTheme.isUsingDark(context)
+              ? Icon(FontAwesomeIcons.solidSun, color: iconsColor(context))
+              : Icon(FontAwesomeIcons.moon, color: iconsColor(context)),
         ),
       ],
     );

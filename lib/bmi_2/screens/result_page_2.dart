@@ -45,7 +45,7 @@ class ResultPage2 extends StatelessWidget {
 
     Color _backgroundColor(BuildContext context) {
       if (inputPageTheme == UsedTheme.LIGHT) {
-        return Colors.grey[300];
+        return NeumorphicTheme.baseColor(context);
         // return theme.current.accentColor;
       } else {
         return Color(0xFF3E3E3E);
@@ -132,6 +132,7 @@ class ResultPage2 extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
+              SizedBox(height: 35),
 
               // BottomButton(
               //   title: "DEBUG",

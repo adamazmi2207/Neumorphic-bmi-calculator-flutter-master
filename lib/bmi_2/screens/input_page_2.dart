@@ -18,6 +18,8 @@ bool maleIndicator = false;
 bool femaleIndicator = false;
 // Color indicatorOffColor = Colors.black54;
 // Color indicatorOnColor = Colors.black54.withOpacity(0.0);
+bool _isButtonDisabled;
+bool _isGenderButtonPressed;
 
 class _InputPage2State extends State<InputPage2> {
   Gender gender;
@@ -25,6 +27,12 @@ class _InputPage2State extends State<InputPage2> {
   int weight = 60;
   int age = 20;
   int sex;
+
+  @override
+  void initState() {
+    _isButtonDisabled = true;
+    _isGenderButtonPressed = false;
+  }
   // Color indicatorColor;
   // final ValueChanged<Gender> onChanged;
 
@@ -43,34 +51,102 @@ class _InputPage2State extends State<InputPage2> {
     final inputPageTheme = NeumorphicTheme.of(context).usedTheme;
     return Scaffold(
       backgroundColor: NeumorphicTheme.baseColor(context),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(30.0, 40.0, 30.0, 15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            TopBar(title: "BMI Calculator"),
-            SizedBox(height: 20.0),
-            Expanded(
-              child: Row(
-                children: <Widget>[
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              TopBar(title: "BMI Calculator"),
+              SizedBox(height: 20.0),
+              Expanded(
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _GenderCard(
+                        title: "MALE",
+                        icon: FontAwesomeIcons.mars,
+                        genderenum: Gender.MALE,
+                        gender: gender,
+                        onChanged: (gender) {
+                          setState(
+                            () {
+                              this.gender = gender;
+                              sex = 1;
+                              _isGenderButtonPressed = true;
+                              _isButtonDisabled = false;
+                              print(_isButtonDisabled);
+                              //print(sex);
+
+                              ///TODO: figure how to make gender button unable to become neutral after clicked once
+                              ///
+
+                              //_isButtonDisabled ? null :
+                              //print(inputPageTheme);
+                              // this.gender == gender
+                              //     ? indicatorOnColor
+                              //     : indicatorOffColor;
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: _GenderCard(
+                        title: "FEMALE",
+                        icon: FontAwesomeIcons.venus,
+                        genderenum: Gender.FEMALE,
+                        gender: gender,
+                        onChanged: (gender) {
+                          setState(
+                            () {
+                              this.gender = gender;
+                              sex = 0;
+                              _isGenderButtonPressed = true;
+                              _isButtonDisabled = false;
+                              print(_isButtonDisabled);
+                              //print(sex);
+                              //  print(theme);
+                              //  print(theme2.toString());
+                              // this.gender == gender
+                              //     ? Colors.black54
+                              //     : Colors.black54.withOpacity(0.0);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: _HeightCard(
+                  height: this.height,
+                  onChanged: (height) {
+                    setState(() {
+                      this.height = height;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: Row(children: <Widget>[
                   Expanded(
-                    child: _GenderCard(
-                      title: "MALE",
-                      icon: FontAwesomeIcons.mars,
-                      genderenum: Gender.MALE,
-                      gender: gender,
-                      onChanged: (gender) {
+                    child: _NumberWithButtonCard(
+                      title: "WEIGHT",
+                      value: weight.toString(),
+                      onClickMinus: () {
                         setState(
                           () {
-                            this.gender = gender;
-                            if (gender.toString() == "MALE") {
-                              return sex = 1;
-                            }
-                            return sex = 0;
-                            //print(inputPageTheme);
-                            // this.gender == gender
-                            //     ? indicatorOnColor
-                            //     : indicatorOffColor;
+                            weight--;
+                          },
+                        );
+                      },
+                      onClickPlus: () {
+                        setState(
+                          () {
+                            weight++;
                           },
                         );
                       },
@@ -78,117 +154,60 @@ class _InputPage2State extends State<InputPage2> {
                   ),
                   SizedBox(width: 12),
                   Expanded(
-                    child: _GenderCard(
-                      title: "FEMALE",
-                      icon: FontAwesomeIcons.venus,
-                      genderenum: Gender.FEMALE,
-                      gender: gender,
-                      onChanged: (gender) {
+                    child: _NumberWithButtonCard(
+                      title: "AGE",
+                      value: age.toString(),
+                      onClickMinus: () {
                         setState(
                           () {
-                            this.gender = gender;
-                            //  print(theme);
-                            //  print(theme2.toString());
-                            // this.gender == gender
-                            //     ? Colors.black54
-                            //     : Colors.black54.withOpacity(0.0);
+                            age--;
+                          },
+                        );
+                      },
+                      onClickPlus: () {
+                        setState(
+                          () {
+                            age++;
                           },
                         );
                       },
                     ),
                   ),
-                ],
+                ]),
               ),
-            ),
-            Expanded(
-              child: _HeightCard(
-                height: this.height,
-                onChanged: (height) {
-                  setState(() {
-                    this.height = height;
-                  });
-                },
+              SizedBox(height: 10.0),
+              BottomButton(
+                title: "CALCULATE",
+                onClick: (_isButtonDisabled == false)
+                    ? () {
+                        //print("selected sex $sex");
+                        BMICalculatorBrain calcBMI = BMICalculatorBrain(
+                            height: height.toInt(),
+                            weight: weight,
+                            gender: gender.toString(),
+                            age: age,
+                            sex: sex);
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ResultPage2(
+                              bmiResult: calcBMI.calculateBMI(),
+                              bmiResultPercent:
+                                  calcBMI.calculateBMIPercentage(),
+                              bmiResultText: calcBMI.getResult(),
+                              bmiInterpretation: calcBMI.getInterpretation(),
+                              bfResult: calcBMI.calculateBodyFat(),
+                              inputPageTheme: inputPageTheme,
+                            ),
+                          ),
+                        );
+                      }
+                    : null,
               ),
-            ),
-            Expanded(
-              child: Row(children: <Widget>[
-                Expanded(
-                  child: _NumberWithButtonCard(
-                    title: "WEIGHT",
-                    value: weight.toString(),
-                    onClickMinus: () {
-                      setState(
-                        () {
-                          weight--;
-                        },
-                      );
-                    },
-                    onClickPlus: () {
-                      setState(
-                        () {
-                          weight++;
-                        },
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(width: 12),
-                Expanded(
-                  child: _NumberWithButtonCard(
-                    title: "AGE",
-                    value: age.toString(),
-                    onClickMinus: () {
-                      setState(
-                        () {
-                          age--;
-                        },
-                      );
-                    },
-                    onClickPlus: () {
-                      setState(
-                        () {
-                          age++;
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ]),
-            ),
-            SizedBox(height: 10.0),
-            BottomButton(
-              title: "CALCULATE",
-              onClick: () {
-                BMICalculatorBrain calcBMI = BMICalculatorBrain(
-                    height: height.toInt(),
-                    weight: weight,
-                    gender: gender.toString(),
-                    age: age,
-                    sex: sex);
-
-                //BfCalculatorBrain calcBF = BfCalculatorBrain(age: age, bmi: bmi,);
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ResultPage2(
-                      bmiResult: calcBMI.calculateBMI(),
-                      bmiResultPercent: calcBMI.calculateBMIPercentage(),
-                      bmiResultText: calcBMI.getResult(),
-                      bmiInterpretation: calcBMI.getInterpretation(),
-                      bfResult: calcBMI.calculateBodyFat(),
-                      inputPageTheme: inputPageTheme,
-                    ),
-                  ),
-                );
-              },
-              //     MaterialPageRoute(
-              //       builder: (context) {
-              //         return ResultPage2( );
-              //       },
-              //     ),
-            ),
-          ],
+              SizedBox(height: 15),
+            ],
+          ),
         ),
       ),
     );
@@ -214,49 +233,48 @@ class _GenderCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: NeumorphicRadio(
-        groupValue: this.gender,
-        boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(20.0)),
-        padding: const EdgeInsets.all(12.0),
-        style: NeumorphicRadioStyle(shape: NeumorphicShape.convex),
-        value: genderenum,
-        child: Stack(
-          children: <Widget>[
-            Neumorphic(
-              style: NeumorphicStyle(
-                shape: NeumorphicShape.concave,
-                intensity: 0.5,
-                color: indicatorColor(context),
+          groupValue: this.gender,
+          boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(20.0)),
+          padding: const EdgeInsets.all(12.0),
+          style: NeumorphicRadioStyle(shape: NeumorphicShape.convex),
+          value: genderenum,
+          child: Stack(
+            children: <Widget>[
+              Neumorphic(
+                style: NeumorphicStyle(
+                  shape: NeumorphicShape.concave,
+                  intensity: 0.5,
+                  color: indicatorColor(context),
+                ),
+                boxShape: NeumorphicBoxShape.circle(),
+                child: Container(
+                  height: 18,
+                  width: 18,
+                ),
               ),
-              boxShape: NeumorphicBoxShape.circle(),
-              child: Container(
-                height: 18,
-                width: 18,
-              ),
-            ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    icon,
-                    color: iconsColor(context),
-                    size: 80.0,
-                  ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: textColor(context),
-                      fontSize: 18.0,
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      icon,
+                      color: iconsColor(context),
+                      size: 80.0,
                     ),
-                  )
-                ],
+                    SizedBox(height: 10.0),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: textColor(context),
+                        fontSize: 18.0,
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-        onChanged: (value) => this.onChanged(value),
-      ),
+            ],
+          ),
+          onChanged: (value) => this.onChanged(value)),
     );
   }
 }
