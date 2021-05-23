@@ -359,7 +359,7 @@ class _NumberWithButtonCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 NeumorphicButton(
-                  onClick: onClickMinus,
+                  onPressed: onClickMinus,
                   style: NeumorphicStyle(shape: NeumorphicShape.concave),
                   boxShape: NeumorphicBoxShape.circle(),
                   padding: const EdgeInsets.all(12.0),
@@ -370,7 +370,7 @@ class _NumberWithButtonCard extends StatelessWidget {
                 ),
                 SizedBox(width: 10.0),
                 NeumorphicButton(
-                  onClick: onClickPlus,
+                  onPressed: onClickPlus,
                   style: NeumorphicStyle(shape: NeumorphicShape.concave),
                   boxShape: NeumorphicBoxShape.circle(),
                   padding: const EdgeInsets.all(12.0),
